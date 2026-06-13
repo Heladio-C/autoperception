@@ -20,9 +20,6 @@ class PerceptionSystem{
     private:
     std::vector<Sensor*> sensors;  //base class pointers 
     std::vector<Detection> detections; //held by value
-
-
-
 };
 
 
