@@ -1,0 +1,219 @@
+'=====================================================================
+'  AutoPerception  —  Console Autonomous-Vehicle Perception Simulator
+'  UML (PlantUML)
+'
+'  LEGEND of confidence:
+'   [BUILT]    = concretely defined in code we wrote (Phases 1-2)
+'   [ROADMAP]  = reconstructed from the project plan (Phases 3-9),
+'                not yet finalized in code — adjust as your build evolves
+'=====================================================================
+
+
+'=====================================================================
+'  DIAGRAM 1 — CLASS DIAGRAM
+'=====================================================================
+@startuml AutoPerception_ClassDiagram
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam class {
+  BackgroundColor #FDFDFD
+  BorderColor #333333
+  ArrowColor #333333
+}
+hide empty members
+
+title AutoPerception — Class Diagram
+
+'---------------------------------------------------------------------
+' Phase 1 : Vec2  [BUILT]
+'---------------------------------------------------------------------
+class Vec2 {
+  - double x
+  - double y
+  --
+  + Vec2(double x, double y)
+  + double magnitude() const
+  + double distanceTo(const Vec2& other) const
+  + void print() const
+  .. operator overloading (Phase 4) ..
+  + Vec2 operator+(const Vec2& rhs) const
+  + Vec2 operator-(const Vec2& rhs) const
+  + bool operator==(const Vec2& rhs) const
+  + {static} friend ostream& operator<<(ostream&, const Vec2&)
+}
+
+'---------------------------------------------------------------------
+' Phase 2 : Sensor hierarchy  [BUILT]
+'---------------------------------------------------------------------
+abstract class Sensor {
+  # string name
+  # Vec2   position
+  # int    id
+  - {static} int nextId
+  - {static} int count
+  --
+  + Sensor(const string& name, const Vec2& position)
+  + virtual ~Sensor()
+  + string getName() const
+  + Vec2   getPosition() const
+  + int    getId() const
+  + void   printInfo() const
+  + {abstract} void scan() const
+}
+
+class Lidar {
+  - double range
+  --
+  + Lidar(const string& name, const Vec2& pos, double range)
+  + void scan() const  <<override>>
+}
+
+class Camera {
+  - double fieldOfView
+  --
+  + Camera(const string& name, const Vec2& pos, double fov)
+  + void scan() const  <<override>>
+}
+
+class Radar {
+  - double maxSpeed
+  --
+  + Radar(const string& name, const Vec2& pos, double maxSpeed)
+  + void scan() const  <<override>>
+}
+
+'---------------------------------------------------------------------
+' Phase 3 : Detection  [ROADMAP]
+'  (composition "has-a"; "classes vs structs" topic — may be a struct)
+'---------------------------------------------------------------------
+class Detection {
+  + Vec2   position
+  + double distance
+  + string type
+  --
+  + Detection(const Vec2& pos, double distance, const string& type)
+  + void print() const
+}
+
+'---------------------------------------------------------------------
+' Phase 3/5/8/9 : PerceptionSystem  [ROADMAP]
+'  Owns sensors via base-class pointers (polymorphism + dynamic memory)
+'  Phase 5 : search / sort / recursion / templates
+'  Phase 8 : queue (incoming readings), stack (undo), map (tracking)
+'  Phase 9 : simulation loop
+'---------------------------------------------------------------------
+class PerceptionSystem {
+  - vector<Sensor*>      sensors
+  - vector<Detection>    detections
+  - queue<Detection>     incoming      ' Phase 8: FIFO readings
+  - stack<Detection>     undoHistory   ' Phase 8: undo
+  - map<int, Detection>  trackedObjects ' Phase 8: object tracking
+  --
+  + PerceptionSystem()
+  + ~PerceptionSystem()                ' deletes owned Sensor*
+  + void addSensor(Sensor* s)
+  + void scanAll() const               ' polymorphic loop over Sensor*
+  + void addDetection(const Detection& d)
+  .. Phase 5 ..
+  + Detection findNearest() const      ' nearest-obstacle search
+  + void sortByDistance()              ' sort detections
+  + int  binarySearch(double dist) const ' recursive
+  .. Phase 7 ..
+  + void loadScenario(const string& file)
+  + void logReport(const string& file) const
+  .. Phase 9 ..
+  + void step()                        ' one tick of the sim loop
+  + void run(int ticks)
+}
+
+'---------------------------------------------------------------------
+' Phase 5 : free function template  [ROADMAP]
+'---------------------------------------------------------------------
+class "template<typename T>\nT findMax(const vector<T>&)" as FindMaxTemplate <<function>>
+
+'=====================================================================
+'  RELATIONSHIPS
+'=====================================================================
+
+' Inheritance (is-a)
+Sensor <|-- Lidar
+Sensor <|-- Camera
+Sensor <|-- Radar
+
+' Composition (owns / part-of)
+Sensor          "1" *-- "1"    Vec2       : position
+Detection       "1" *-- "1"    Vec2       : position
+PerceptionSystem "1" *-- "0..*" Sensor    : owns >
+PerceptionSystem "1" *-- "0..*" Detection : collects >
+
+' Dependency (uses)
+PerceptionSystem ..> FindMaxTemplate : uses
+
+note bottom of Sensor
+  Abstract base class:
+  pure virtual scan() makes
+  it impossible to instantiate.
+  Virtual destructor required
+  for safe delete via Sensor*.
+end note
+
+note bottom of PerceptionSystem
+  [ROADMAP] Phases 3-9.
+  Holds polymorphic Sensor*
+  pointers and owns their memory.
+end note
+
+@enduml
+
+
+'=====================================================================
+'  DIAGRAM 2 — SEQUENCE DIAGRAM (Phase 9 simulation loop)  [ROADMAP]
+'  Illustrative flow of one simulation tick.
+'=====================================================================
+@startuml AutoPerception_SimulationLoop
+
+skinparam shadowing false
+title AutoPerception — One Simulation Tick (Phase 9)
+
+actor User
+participant "main()" as Main
+participant ":PerceptionSystem" as PS
+participant "lidar:Lidar" as L
+participant "camera:Camera" as C
+participant "radar:Radar" as R
+
+User -> Main : run program
+activate Main
+
+Main -> PS : loadScenario("scenario.txt")
+Main -> PS : run(ticks)
+activate PS
+
+loop each tick
+  PS -> L : scan()
+  activate L
+  L --> PS : detection
+  deactivate L
+
+  PS -> C : scan()
+  activate C
+  C --> PS : detection
+  deactivate C
+
+  PS -> R : scan()
+  activate R
+  R --> PS : detection
+  deactivate R
+
+  PS -> PS : sortByDistance()
+  PS -> PS : findNearest()
+  PS -> PS : update trackedObjects (map)
+  PS -> PS : logReport("log.txt")
+end
+
+deactivate PS
+Main --> User : simulation complete
+deactivate Main
+
+@enduml
