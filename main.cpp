@@ -22,5 +22,14 @@ int main(){
     perception.report();
 
 
+    Vec2 a(3.0, 4.0);
+    Vec2 b(1.0, 2.0);
+
+    cout << "a = " << a << ", b = " << b << endl;   // operator<< (chained!)
+    cout << "a + b = " << (a + b) << endl;          // operator+ then operator
+    cout << "a - b = " << (a - b) << endl;          // operator-
+    cout << "a == b?     " << (a == b) << endl;     // operator==  (prints 0)
+    cout << "a == a?     " << (a == a) << endl;     // operator==  (prints 1)
+
     return 0;
 }
