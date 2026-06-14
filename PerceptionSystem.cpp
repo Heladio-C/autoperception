@@ -9,7 +9,6 @@ PerceptionSystem::~PerceptionSystem(){
     }
 }
 
-
 void PerceptionSystem::addSensor(Sensor* s){
     sensors.push_back(s);
 }
@@ -19,7 +18,7 @@ void PerceptionSystem::addDetection(const Detection& d){
 }
 
 void PerceptionSystem::runScan() const{
-    cout << "There are currently " << sensors.size() << "sensors" << endl;
+    cout << "There are currently " << sensors.size() << " sensors" << endl;
     for(Sensor* s : sensors){
         s->scan();
     }
