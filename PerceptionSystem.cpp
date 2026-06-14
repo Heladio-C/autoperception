@@ -25,3 +25,19 @@ void PerceptionSystem::runScan() const{
     }
     cout << endl;
 }
+
+void PerceptionSystem::report() const{
+    cout << left << setw(14) << "Type" << setw(18) << "Position"
+    << "Distance" << endl;
+    cout << string(40, '-') << endl;
+
+    cout << fixed << setprecision(2);
+
+    for(const Detection& d : detections){
+        cout << left << setw(14) << d.type;
+        d.position.print();
+        cout << "   distance " << d.position.magnitude() << " m" << endl;
+    }
+
+
+}
