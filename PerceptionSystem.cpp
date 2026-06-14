@@ -1,6 +1,7 @@
 #include "PerceptionSystem.h"
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 using namespace std;
 
 PerceptionSystem::~PerceptionSystem(){
@@ -37,4 +38,15 @@ void PerceptionSystem::report() const{
         d.position.print();
         cout << "   distance " << d.position.magnitude() << " m" << endl;
     }
+}
+//sort detections by distance from origin (0,0)
+void PerceptionSystem::sortByDistance(){
+    sort(detections.begin(), detections.end(), [](const Detection& a, const Detection& b){
+        return a.position.magnitude() < b.position.magnitude();
+    });
+}
+
+
+const Detection& PerceptionSystem::nearest() const{
+    return *min_element(detections.begin(), detections.end(), [](const Detection& a, const Detection& b) {return a.position.magnitude() < b.position.magnitude();});
 }
