@@ -38,6 +38,4 @@ void PerceptionSystem::report() const{
         d.position.print();
         cout << "   distance " << d.position.magnitude() << " m" << endl;
     }
-
-
 }
