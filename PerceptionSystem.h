@@ -22,7 +22,7 @@ class PerceptionSystem{
     void report() const;
 
     void sortByDistance(); //sort detections by distance from origin (0,0)
-    int findNearest() const; //find the nearest detection to the origin (0,0)
+    const Detection& nearest() const; //find the nearest detection to the origin (0,0)
 
     private:
     std::vector<Sensor*> sensors;  //base class pointers 
