@@ -5,13 +5,7 @@
 #include <algorithm>
 using namespace std;
 
-PerceptionSystem::~PerceptionSystem(){
-    for(Sensor* s : sensors){
-        delete s;
-    }
-}
-
-void PerceptionSystem::addSensor(Sensor* s){
+void PerceptionSystem::addSensor(unique_ptr<Sensor> s){
     sensors.push_back(s);
 }
 
@@ -21,7 +15,7 @@ void PerceptionSystem::addDetection(const Detection& d){
 
 void PerceptionSystem::runScan() const{
     cout << "There are currently " << sensors.size() << " sensors" << endl;
-    for(Sensor* s : sensors){
+    for(const auto& s : sensors){
         s->scan();
     }
     cout << endl;
