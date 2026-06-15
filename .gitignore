@@ -1,22 +1,10 @@
-# --- VS Code & System Clutter ---
-.vscode/
-.DS_Store
-Thumbs.db
-
-# --- Compiled Executables (Windows) ---
+﻿# build output
+build/
+autoperception
+*.o
+*.out
 *.exe
 
-# --- MSVC Build Artifacts & Intermediate Files ---
-*.obj
-*.pdb
-*.ilk
-*.tlog
-*.lastbuildstate
-*.idb
-vc140.pdb
-
-# --- Build & Output Directories ---
-[Bb]uild/
-[Bb]in/
-[Oo]bj/
-out/
+# editor / OS
+.vscode/
+.DS_Store
