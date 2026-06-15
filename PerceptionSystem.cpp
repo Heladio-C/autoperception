@@ -1,4 +1,5 @@
 #include "PerceptionSystem.h"
+#include "PerceptionError.h"
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
@@ -27,8 +28,7 @@ void PerceptionSystem::runScan() const{
 }
 
 void PerceptionSystem::report() const{
-    cout << left << setw(14) << "Type" << setw(18) << "Position"
-    << "Distance" << endl;
+    cout << left << setw(14) << "Type" << setw(18) << "Position / Distance" << endl;
     cout << string(40, '-') << endl;
 
     cout << fixed << setprecision(2);
@@ -48,5 +48,10 @@ void PerceptionSystem::sortByDistance(){
 
 
 const Detection& PerceptionSystem::nearest() const{
+
+    if(detections.empty()){
+        throw PerceptionError("nearest() called but no detection exists");
+    }
+
     return *min_element(detections.begin(), detections.end(), [](const Detection& a, const Detection& b) {return a.position.magnitude() < b.position.magnitude();});
 }
