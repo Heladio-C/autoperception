@@ -1,4 +1,5 @@
 #include "PerceptionSystem.h"
+#include "BoundingBox.h"
 #include "Lidar.h"
 #include "Camera.h"
 #include "Radar.h"
@@ -10,6 +11,10 @@ using namespace std;
 
 int main(){
 
+
+    BoundingBox box{10.0, 20.0, 30.0, 40.0};
+
+    cout << "Area=" << box.area();
     
     PerceptionSystem perception;
     perception.addSensor(make_unique<Lidar>("FrontLidar", Vec2(2.5, 0.0), 80.0));
@@ -28,6 +33,7 @@ int main(){
 
     const Detection& closest = perception.nearest();
     cout << "\nMost urgent: " << closest.type << " at " << closest.position << " (" << closest.position.magnitude() << " m)" << endl;
+
 
 
     return 0;
