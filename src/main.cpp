@@ -6,37 +6,40 @@
 #include "Radar.h"
 #include "Vec2.h"
 #include "Detection.h"
+#include "Nms.h"
+#include <vector>
 #include <iostream>
 #include <memory>
 using namespace std;
 
 int main(){
 
-    BoundingBox a{0, 0, 4, 2};   // area 8
-    BoundingBox b{0, 0, 2, 2};   // area 4, sits fully inside a
-    BoundingBox c{5, 5, 2, 2};   // off on its own, no overlap
-
-    std::cout << "identical: " << iou(a, a) << "\n";   // expect 1
-    std::cout << "contained: " << iou(a, b) << "\n";   // expect 0.5
-    std::cout << "disjoint:  " << iou(a, c) << "\n";    // expect 0
-    
     PerceptionSystem perception;
     perception.addSensor(make_unique<Lidar>("FrontLidar", Vec2(2.5, 0.0), 80.0));
     perception.addSensor(make_unique<Camera>("FrontCam", Vec2(2.0, 0.5), 90.0));
     perception.addSensor(make_unique<Radar>("RearRadar", Vec2(-1.5, 0.0), 60.0));
 
-    perception.addDetection({Vec2(25.0, 8.0), "truck"});
-    perception.addDetection({Vec2(10.0, 3.0), "car"});
-    perception.addDetection({Vec2(4.0, -1.0), "pedestrian"});
 
-    perception.runScan();
+    perception.addDetection({ Vec2(10, 3), "car",   BoundingBox{100, 100, 50, 40}, 0.92 });
+    perception.addDetection({ Vec2(10, 3), "car",   BoundingBox{104, 102, 50, 40}, 0.75 });
+    perception.addDetection({ Vec2(25, 8), "truck", BoundingBox{300, 200, 50, 40}, 0.88 });
 
-    perception.sortByDistance();
-    cout << "Detections (Closest first):" << endl;
+    std::cout << "Before NMS:\n";
     perception.report();
 
-    const Detection& closest = perception.nearest();
-    cout << "\nMost urgent: " << closest.type << " at " << closest.position << " (" << closest.position.magnitude() << " m)" << endl;
+    perception.cleanDetections();
+
+    std::cout << "\nAfter NMS:\n";
+    perception.report();
+
+    // perception.runScan();
+
+    // perception.sortByDistance();
+    // cout << "Detections (Closest first):" << endl;
+    // perception.report();
+
+    // const Detection& closest = perception.nearest();
+    // cout << "\nMost urgent: " << closest.type << " at " << closest.position << " (" << closest.position.magnitude() << " m)" << endl;
 
 
 
