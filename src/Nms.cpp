@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-std::vector<Detection> nonMaxSupression(std::vector<Detection> detections, double iouThreshold){
+std::vector<Detection> nonMaxSuppression(std::vector<Detection> detections, double iouThreshold){
 
 
     std::sort(detections.begin(), detections.end(), [](const Detection& a, const Detection& b){
