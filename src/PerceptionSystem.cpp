@@ -1,5 +1,6 @@
 #include "PerceptionSystem.h"
 #include "PerceptionError.h"
+#include "Nms.h"
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
@@ -51,4 +52,9 @@ const Detection& PerceptionSystem::nearest() const {
         [](const Detection& a, const Detection& b) {
             return a.position.magnitude() < b.position.magnitude();
         });
+}
+
+// This is where we call the non-max suppression function to clean up our detections
+void PerceptionSystem::cleanDetections(double iouThreshold){
+    detections = nonMaxSuppression(detections, iouThreshold);
 }
