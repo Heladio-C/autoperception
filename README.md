@@ -1,10 +1,10 @@
 # AutoPerception
 
-A C++ perception system that models the core of an autonomous-vehicle sensing pipeline — multiple sensors reporting obstacles, fused into a single clean picture of the world. Every algorithm is implemented from scratch, with no OpenCV or external computer-vision libraries, to demonstrate the underlying engineering rather than wrap a black box.
+A C++ perception system that models the core of an autonomous-vehicle sensing involving multiple sensors reporting obstacles, fused into a single clean picture of the world. Every algorithm is implemented from scratch to demonstrate the underlying engineering rather than wrap a black box.
 
 ## Overview
 
-AutoPerception simulates how a self-driving car turns raw sensor output into an actionable list of obstacles. A central `PerceptionSystem` owns a set of sensors, collects what each one detects, removes duplicate detections, and reports the result ordered by distance from the vehicle. It is built as a learning and portfolio project around modern C++ and computer-vision fundamentals.
+AutoPerception simulates how a self-driving car turns raw sensor output into an actionable list of obstacles. A central `PerceptionSystem` owns a set of sensors, collects what each one detects, removes duplicate detections with Non-Maximum Suppression (NMS) algorithm, and reports the result ordered by distance from the vehicle. It is built as a learning and portfolio project around modern C++ and computer-vision fundamentals.
 
 ## What it demonstrates
 
