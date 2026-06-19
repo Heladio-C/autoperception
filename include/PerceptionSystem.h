@@ -23,6 +23,10 @@ class PerceptionSystem{
     // This is where we call the non-max suppression function to clean up our detections
     void cleanDetections(double iouThreshold = 0.5);
 
+    const std::vector<Detection>& getDetections() const{
+        return detections;
+    }
+
     private:
     
     std::vector<std::unique_ptr<Sensor>> sensors;  //base class pointers 

@@ -7,6 +7,7 @@
 #include "Vec2.h"
 #include "Detection.h"
 #include "Nms.h"
+#include "DatasetLogger.h"
 #include <vector>
 #include <iostream>
 #include <memory>
@@ -32,16 +33,7 @@ int main(){
     std::cout << "\nAfter NMS:\n";
     perception.report();
 
-    // perception.runScan();
-
-    // perception.sortByDistance();
-    // cout << "Detections (Closest first):" << endl;
-    // perception.report();
-
-    // const Detection& closest = perception.nearest();
-    // cout << "\nMost urgent: " << closest.type << " at " << closest.position << " (" << closest.position.magnitude() << " m)" << endl;
-
-
+    writeDetections(perception.getDetections(), "dataset.csv");
 
     return 0;
 }
