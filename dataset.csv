@@ -1,3 +1,7 @@
 width, height, aspect_ratio, area, confindence, type
 50,40,1.25,2000,0.92,car
 50,40,1.25,2000,0.88,truck
+50,40,1.25,2000,0.92,car
+50,40,1.25,2000,0.88,truck
+50,40,1.25,2000,0.92,car
+50,40,1.25,2000,0.88,truck
