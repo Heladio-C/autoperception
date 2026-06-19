@@ -19,7 +19,7 @@ void writeDetections(const std::vector<Detection>& detections, const std::string
 
     // write detections
     if(isEmpty){
-        out << "width, height, aspect_ratio, area, confindence, type\n";
+        out << "width, height, aspect_ratio, area, confidence, type\n";
     }
 
     for(const Detection& d : detections){
