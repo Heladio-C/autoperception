@@ -8,6 +8,7 @@
 #include "Detection.h"
 #include "Nms.h"
 #include "DatasetLogger.h"
+#include "DataGenerator.h"
 #include <vector>
 #include <iostream>
 #include <memory>
@@ -33,7 +34,9 @@ int main(){
     std::cout << "\nAfter NMS:\n";
     perception.report();
 
-    writeDetections(perception.getDetections(), "dataset.csv");
-
+    //generator dataset and write to file
+    std::vector<Detection> trainingSet = generateDataset(200); //generate 200 samples per class
+    writeDetections(trainingSet, "dataset.csv");
+    std::cout << "\nGenerated dataset with " << trainingSet.size() << " samples and saved to dataset.csv\n";
     return 0;
 }
