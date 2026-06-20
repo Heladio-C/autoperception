@@ -25,6 +25,10 @@ public:
     //runs prediction on the test dataset and returns accuracy 
     double evaluate(const std::vector<Sample>& test) const;
 
+    //prints confusion matrix for the test dataset, rows = true labels, columns = predicted labels
+    void confusionMatrix(const std::vector<Sample>& test) const;
+
+
 
 private:
     int k;

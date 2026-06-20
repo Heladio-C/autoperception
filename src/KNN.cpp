@@ -3,6 +3,9 @@
 #include <cmath>
 #include <algorithm> 
 #include <map>
+#include <iostream>
+#include <iomanip>
+#include <set>
 
 
 //k-NN remembers training data and uses it to predict labels 
@@ -74,4 +77,46 @@ double KNN::distance(const Sample& a, const Sample& b) {
         sum += diff * diff;
     }
     return std::sqrt(sum);
+}
+
+void KNN::confusionMatrix(const std::vector<Sample>& test) const {
+    // collect distinct labels (sorted for consistent order)
+    //std::set is used to store unique labels from the test dataset
+    std::set<std::string> labelSet;
+
+    for(const Sample& s : test){
+        labelSet.insert(s.label);
+    }
+
+    //convert set to vector for indexing
+    std::vector<std::string> labels(labelSet.begin(), labelSet.end());
+
+    //counts[true][predicted] = number of test samples
+    std::map<std::string, std::map<std::string, int>> counts;
+
+    for(const Sample& s : test){
+        std::string predicted = predict(s);
+        counts[s.label][predicted]++;
+    }
+
+    //header row: preidcted labels column titles
+
+    std::cout << "Confusion Matrix (rows = actual, columns = predicated):\n\n";
+    std::cout << std::left << std::setw(14) << "Actual \\ Pred";
+    for(const std::string& col : labels){
+        std::cout << std::setw(12) << col;
+    }
+
+    std::cout << "\n";
+
+    //one row per true label
+    for(const std::string& row : labels){
+        std::cout << std::left << std::setw(14) << row;
+
+        for(const std::string& col : labels){
+            std::cout << std::setw(12) << counts[row][col];
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
 }
