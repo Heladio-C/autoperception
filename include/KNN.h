@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include "Dataset.h"
 
 
@@ -29,11 +30,24 @@ public:
     void confusionMatrix(const std::vector<Sample>& test) const;
 
 
+    //prints macro-average scores
+    void classificationReport(const std::vector<Sample>& test) const;
+
+
 
 private:
     int k;
     std::vector<Sample> trainingData;
     static double distance(const Sample& a, const Sample& b);
+
+    struct ConfusionData{
+        std::vector<std::string> labels;
+
+        std::vector<std::string, std::map<std::string, int>> counts;
+    };
+
+
+    ConfusionData computeConfusion(const std::vector<Sample>& test) const;
 };
 
 #endif

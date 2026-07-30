@@ -79,6 +79,23 @@ double KNN::distance(const Sample& a, const Sample& b) {
     return std::sqrt(sum);
 }
 
+KNN::ConfusionData KNN::computeConfusion(const std::vector<Sample>& test) const {
+    ConfusionData cd;
+ 
+    std::set<std::string> labelSet;
+    for(const Sample& s : test){
+        std::string predicted = predict(s);
+        labelSet.insert(s.label);
+        labelSet.insert(predicted);
+        cd.counts[s.label][predicted]++;
+    }
+ 
+    cd.labels.assign(labelSet.begin(), labelSet.end());
+    return cd;
+}
+
+
+
 void KNN::confusionMatrix(const std::vector<Sample>& test) const {
     // collect distinct labels (sorted for consistent order)
     //std::set is used to store unique labels from the test dataset
