@@ -1,6 +1,6 @@
 # AutoPerception
 
-A C++ perception system that models the core of autonomous-vehicle sensing: multiple sensors reporting obstacles, fused into a single clean picture of the world, then classified by type. Every algorithm — from the computer-vision geometry to the machine-learning classifier — is implemented from scratch to demonstrate the underlying engineering rather than wrap a black box.
+A C++ perception system that models the core of autonomous-vehicle sensing: multiple sensors reporting obstacles, fused into a single clean picture of the world, then classified by type. Every algorithm from the computer-vision geometry to the machine-learning classifier is implemented from scratch to demonstrate the underlying engineering rather than wrap a black box.
 
 ## Overview
 
